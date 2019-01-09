@@ -19,6 +19,7 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
     }
 
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return people.count
     }
@@ -70,5 +71,24 @@ extension ViewController: UIImagePickerControllerDelegate {
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
+    }
+}
+
+extension ViewController {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let person = people[indexPath.item]
+        let ac = UIAlertController(title: "Rename Person", message: "Do you want to rename/ give a name to the image?", preferredStyle: .alert)
+        ac.addTextField()
+        
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        ac.addAction(UIAlertAction(title: "Add Name", style: .default){ [unowned self, ac] _ in
+        let newName = ac.textFields![0]
+        person.name = newName.text!
+        
+        self.collectionView.reloadData()
+            
+    })
+        present(ac, animated: true)
     }
 }
